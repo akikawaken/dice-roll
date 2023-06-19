@@ -6,8 +6,8 @@ if %dice% == licence goto licence
 echo start!
 :roll
 set check= %random%
-echo %check%
-if %check% == 0 pause
+rem echo %check%
+rem if %check% == 0 pause
 if %check% LEQ %dice% ( if not %check% == 0 ( goto done ) ELSE ( goto roll) ) ELSE ( goto roll )
 :done
 echo 1d%dice% -^>%check%
