@@ -11,6 +11,7 @@ if %check% LEQ %dice% ( goto done ) ELSE ( goto roll )
 :done
 echo 1d%dice% -^>%check%
 pause
+exit
 :licence
 echo;
 echo MIT License
