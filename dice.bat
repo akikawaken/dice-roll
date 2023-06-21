@@ -1,19 +1,30 @@
 @echo off
+if exist dice.tcf ( goto loadsetting ) ELSE ( goto dice )
+:dice
 echo dice roll! (max:32767)
-echo if u type "licence", can see licence!
+echo if u type "license", can see license!
 set /p dice=1d
-if %dice% == licence goto licence
+if %dice% == license goto license
 echo start!
+set countlog=0
+set logtime=%date%-%time%
 :roll
 set check= %random%
-rem echo %check%
-rem if %check% == 0 pause
+set /a countlog=%countlog% + 1
+if %showall% == true echo %check%
+if %count% == true echo %countlog% 
+if %showallforlog% == true echo %check%>> dice%logtime%.log
+if %showcountforlog% == true echo %countlog%>> dice%logtime%.log
+if %stopatzero% == true if %check% == 0 pause
 if %check% LEQ %dice% ( if not %check% == 0 ( goto done ) ELSE ( goto roll) ) ELSE ( goto roll )
 :done
+if %count% == true echo total : %countlog% 
 echo 1d%dice% -^>%check%
+if %log% == true echo 1d%dice% -^>%check%>> dice%logtime%.log
 pause
+if %noexit% == true goto dice
 exit
-:licence
+:license
 echo;
 echo MIT License
 echo;
@@ -37,3 +48,25 @@ echo LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FRO
 echo OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 echo SOFTWARE.
 pause
+exit
+:loadsetting
+for /f "tokens=1-7" %%a in (dice.tcf) do (
+  if %%a == log:true ( set log=true ) ELSE ( set log=false )
+  if %%b == ShowAll:true ( set showall=true ) ELSE ( set showall=false )
+  if %%c == NoExit:true ( set noexit=true ) ELSE ( set noexit=false )
+  if %%d == Count:true ( set count=true ) ELSE ( set count=false )
+  if %%e == ShowCountForLog:true ( set showcountforlog=true ) ELSE ( set showcountforlog=false )
+  if %%f == ShowAllForLog:true ( set showallforlog=true ) ELSE ( set showallforlog=false )
+  if %%g == StopAtZero:true ( set stopatzero=true ) ELSE ( set stopatzero=false )
+)
+echo setting file found
+echo;
+  echo log %log%
+  echo showall %showall%
+  echo noexit %noexit%
+  echo count %count%
+  echo showcountforlog %showcountforlog%
+  echo showallforlog %showallforlog%
+  echo stopatzero %stopatzero%
+echo;
+goto dice
